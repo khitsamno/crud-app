@@ -1,24 +1,33 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-
+import jwt from "jsonwebtoken";
+import config from "../config/config";
+import Home from "../views/Home/Home.vue";
+import Register from "../views/Auth/Register.vue";
+import Login from "../views/Auth/Login.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: "/login",
+    name: "Login",
+    component: Login,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+    path: "/register",
+    name: "Register",
+    component: Register
+  },
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { path: '*', redirect: '/' }
+
 ];
 
 const router = new VueRouter({
@@ -26,5 +35,21 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
-
 export default router;
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('token');
+  const decoded = jwt.decode(loggedIn, config.SECRET_KEY);
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (loggedIn && decoded) {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next()
+  }
+
+
+})
+
