@@ -1,3 +1,4 @@
+import { todoService } from "../../services";
 
 const todos = {
     namespaced: true,
@@ -21,45 +22,24 @@ const todos = {
     },
     actions: {
         loadData: ({ commit }) => {
-            let data = JSON.parse(localStorage.getItem('todoLists') || "[]");
+            let data = todoService.getAll();
             commit('SET_TODO', data)
         },
 
         addNewTodo: ({ commit }, title) => {
-
-            let existing = JSON.parse(localStorage.getItem('todoLists'));
-            let last = existing ? existing[existing.length - 1]['id'] : 0;
-            let data = { "id": last += 1, "title": title, "isEdit": false };
-            existing = existing ? existing : [];
-            existing.push(data);
-            localStorage.setItem('todoLists', JSON.stringify(existing));
+            let data = todoService.create(title);
             commit('ADD_TODO', JSON.parse(JSON.stringify(data)));
         },
         removeTodo: ({ commit }, id) => {
-            let data = JSON.parse(localStorage.getItem('todoLists'));
-            data.filter((todo, index) => {
-                todo.id == id && data.splice(index, 1)
-            });
-
-            if (data.length == 0) {
-                localStorage.removeItem('todoLists');
-            } else {
-                localStorage.setItem('todoLists', JSON.stringify(data));
-            }
-            commit('REMOVE_TODO', data)
+            let data = todoService.remove(id);
+            commit('REMOVE_TODO', data);
         },
         getEditTodo: ({ commit }, id) => {
-            commit('GET_EDIT_TODO', id)
+            commit('GET_EDIT_TODO', id);
         },
         updateTodo: ({ commit }, payload) => {
-            let data = JSON.parse(localStorage.getItem('todoLists'));
-            data.filter(todo => {
-                if (todo.id == payload.id) {
-                    todo.title = payload.title
-                }
-            });
-            localStorage.setItem('todoLists', JSON.stringify(data));
-            commit('UPDATE_TODO', payload)
+            todoService.update(payload);
+            commit('UPDATE_TODO', payload);
         }
 
     },

@@ -7,6 +7,9 @@
           <div
             class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
           >
+            <div
+              class="px-3 py-1 border border-teal-500 rounded-md text-md text-teal-500"
+            >{{fullname}}</div>
             <!-- Profile dropdown -->
             <div class="ml-3 relative">
               <div>
@@ -27,8 +30,11 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "Header",
   computed: {
-    ...mapState("users", ["token"]),
-    ...mapActions(["logout"])
+    ...mapState("users", ["token", "fullname"]),
+    ...mapActions(["logout", "getUserLogin"])
+  },
+  created() {
+    this.$store.dispatch("users/getUserLogin");
   },
   methods: {
     onLogout() {

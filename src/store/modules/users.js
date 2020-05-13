@@ -1,10 +1,8 @@
-import bcrypt from 'bcryptjs';
-import jwt from "jsonwebtoken";
-import config from "../../config/config";
+import { userService } from '../../services/index';
 
 const users = {
     namespaced: true,
-    state: { users: [], message: '', token: localStorage.getItem('token') },
+    state: { users: [], message: '', token: localStorage.getItem('token') || '', fullname: '' },
     mutations: {
         SET_USERS: (state, data) => {
             state.users = data;
@@ -18,51 +16,45 @@ const users = {
         LOGIN_ERROR: (state, message) => {
             state.message = message
         },
+        LOGIN_SUCCESS: (state) => {
+            state.message = ""
+        },
         LOGOUT: (state) => {
             state.token = ""
+        },
+        USERN_NAME: (state, data) => {
+            state.fullname = data;
         }
     },
 
     actions: {
         loadUsers: ({ commit }) => {
-            let data = JSON.parse(localStorage.getItem('users') || "[]");
+            let data = userService.getAll();
             commit('SET_USERS', data)
+        },
+        getUserLogin: ({ commit }) => {
+            const user = userService.getUserLogin();
+            commit('USERN_NAME', user.fullname)
         },
         register: ({ commit }, payload) => {
 
-            let existing = JSON.parse(localStorage.getItem('users'));
-            let last = existing ? existing[existing.length - 1]['id'] : 0;
-            let data = { "id": last += 1, "fullname": payload.fullname, "username": bcrypt.hashSync(payload.username, 8), "password": bcrypt.hashSync(payload.password, 8) };
-            existing = existing ? existing : [];
-            existing.push(data);
-            localStorage.setItem('users', JSON.stringify(existing));
-            commit('REGISTER', JSON.parse(JSON.stringify(data)))
+            let response = userService.register(payload);
+            commit('REGISTER', JSON.parse(JSON.stringify(response)))
+
         },
         login: ({ commit }, payload) => {
-
-            let users = JSON.parse(localStorage.getItem('users') || "[]");
-            users.filter(user => {
-                let usernameIsValid = bcrypt.compareSync(payload.username, user.username);
-                let passwordIsValid = bcrypt.compareSync(payload.password, user.password);
-                if (usernameIsValid && passwordIsValid) {
-                    let token = jwt.sign({ id: user.id }, config.SECRET_KEY, {
-                        expiresIn: 86400
-                    });
-                    commit('LOGIN', token)
-                    localStorage.setItem("token", token)
-
-                } else {
-                    let message = "Invalid credential";
-                    commit('LOGIN_ERROR', message)
-                    localStorage.removeItem('token')
-                }
-
-            });
-
+            let response = userService.login(payload);
+            if (response) {
+                commit('LOGIN', response)
+                commit('LOGIN_SUCCESS')
+            } else {
+                let message = "Invalid credential";
+                commit('LOGIN_ERROR', message)
+            }
         },
         logout: ({ commit }) => {
             commit('logout')
-            localStorage.removeItem('token')
+            userService.logout();
         }
 
     },
