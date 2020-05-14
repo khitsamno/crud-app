@@ -59,8 +59,8 @@ const users = {
             }
         },
         logout: ({ commit }) => {
-            commit('logout')
             userService.logout();
+            commit('LOGOUT')
         }
 
     },
