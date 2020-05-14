@@ -20,21 +20,27 @@ function register(payload) {
 
 function login(payload) {
     let users = JSON.parse(localStorage.getItem('users') || "[]");
-    let userToken = users.filter(user => jwt.decode(user, config.SECRET_KEY).username == payload.username);
-    let userPayload = jwt.decode(userToken.toString(), config.SECRET_KEY);
-    let passwordIsValid = bcrypt.compareSync(payload.password, userPayload.password);
     let token = '';
-    if (passwordIsValid) {
-        token = jwt.sign({ id: userPayload.id, fullname: userPayload.fullname }, config.SECRET_KEY, {
-            expiresIn: 86400
-        }, { algorithm: 'RS256' });
-        localStorage.setItem("token", token);
-        return token;
-    } else {
+    if (users.length) {
+        let userToken = users.filter(user => jwt.decode(user, config.SECRET_KEY).username == payload.username);
+        let userPayload = jwt.decode(userToken.toString(), config.SECRET_KEY);
+        let passwordIsValid = bcrypt.compareSync(payload.password, userPayload.password);
 
-        localStorage.removeItem('token')
-        return token;
+        if (passwordIsValid) {
+            token = jwt.sign({ id: userPayload.id, fullname: userPayload.fullname }, config.SECRET_KEY, {
+                expiresIn: 86400
+            }, { algorithm: 'RS256' });
+            localStorage.setItem("token", token);
+            return token;
+        } else {
+
+            localStorage.removeItem('token')
+            return token;
+        }
+
     }
+    return token;
+
 }
 
 function logout() {
