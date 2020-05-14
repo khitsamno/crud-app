@@ -19,20 +19,21 @@ npm run build
 ```
 npm run lint
 ```
-### Usage
+### Functions
 ```
-1. Register user :
-   - go to register page
-   - fill in the information
-2. Login :
-   - go to login page
-   - fill in username and password
-3. Logout:
-    - click button logout at the top right
-4. Todo App Dashboard
-   - To create todo list, fill title in textbox and click enter or button icon plus
-   - To edit todo, click on button icon pencel cusor will focus on textbox and click enter or    button save to update it
-   - To delete todo, click on button icon cross and then it will popup canfirmation alert try to click buuton Ok to delete or Cancel it  to click button Cancel
+Authentication feature 
+* Registration form
+* login form
+* redirecting to the app,
+
+CRUD
+operations on records:
+* Store,
+* Update,
+* Delete,
+
+Storage	feature
+* All the value has been save locally with encryption to prevent read write from unknown user,
 ```
 
 ### Customize configuration
