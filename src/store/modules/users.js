@@ -3,6 +3,12 @@ import { userService } from '../../services/index';
 const users = {
     namespaced: true,
     state: { users: [], message: '', token: localStorage.getItem('token') || '', fullname: '' },
+    getters: {
+        getUsers: (state) => state.users,
+        getToken: (state) => state.token,
+        getMessage: (state) => state.message,
+        getFullname: (state) => state.fullname,
+    },
     mutations: {
         SET_USERS: (state, data) => {
             state.users = data;
@@ -60,4 +66,4 @@ const users = {
     },
 }
 
-export { users };
+export default users;

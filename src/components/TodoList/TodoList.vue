@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="flex grid grid-flow-row pt-1">
-      <li class="py-3 border-b px-5 flex justify-between" v-for="todo in todos" :key="todo['id']">
+      <li class="py-3 border-b px-5 flex justify-between" v-for="todo in getTodo" :key="todo['id']">
         <span v-if="!todo['isEdit']">{{todo['title']}}</span>
         <span v-else>
           <input
@@ -25,7 +25,7 @@
           >&#x2715;</button>
         </span>
       </li>
-      <li class="py-3 border-b px-5 bg-orange-200 text-orange-700" v-show="todos.length === 0">
+      <li class="py-3 border-b px-5 bg-orange-200 text-orange-700" v-show="getTodoLength === 0">
         <span class="font-bold mr-5">Oppp !</span>
         <span>No item found.</span>
       </li>
@@ -33,11 +33,11 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "TodoList",
   computed: {
-    ...mapState("todos", ["todos"]),
+    ...mapGetters("todos", ["getTodo", "getTodoLength"]),
     ...mapActions(["loadData", "removeTodo", "getEditTodo", "updateTodo"])
   },
   mounted() {

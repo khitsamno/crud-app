@@ -7,6 +7,9 @@ const validate = {
             type: ''
         }
     },
+    getters: {
+        getValidate: (state) => state.validate
+    },
     mutations: {
         SET_VALIDATE_REGISTER: (state, payload) => {
             if (payload.fullname == '') {
@@ -62,4 +65,4 @@ const validate = {
 
 }
 
-export { validate };
+export default validate;

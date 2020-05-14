@@ -14,12 +14,12 @@
           type="submit"
         >&#10010;</button>
       </div>
-      <AlertDanger v-bind:message="validate.message" />
+      <AlertDanger v-bind:message="getValidate.message" />
     </form>
   </div>
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import AlertDanger from "../../components/Alerts/AlertDanger.vue";
 export default {
   name: "TodoForm",
@@ -30,7 +30,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("validate", ["validate"]),
+    ...mapGetters("validate", ["getValidate"]),
     ...mapActions(["addNewTodo"]),
     ...mapActions(["validateTodo"])
   },
@@ -39,7 +39,7 @@ export default {
       e.preventDefault();
       this.$store
         .dispatch("validate/validateTodo", this.title)
-        .then((valid = this.validate.message) => {
+        .then((valid = this.getValidate.message) => {
           if (valid == "") {
             this.$store.dispatch("todos/addNewTodo", this.title).then(() => {
               this.title = "";

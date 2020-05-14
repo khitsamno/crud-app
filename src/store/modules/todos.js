@@ -5,6 +5,14 @@ const todos = {
     state: {
         todos: []
     },
+    getters: {
+        getTodo: state => {
+            return state.todos
+        },
+        getTodoLength: state => {
+            return state.todos.length
+        },
+    },
     mutations: {
         SET_TODO: (state, todo) => state.todos = todo,
         ADD_TODO: (state, todo) => state.todos.unshift(todo),
@@ -46,4 +54,4 @@ const todos = {
 
 }
 
-export { todos };
+export default todos;

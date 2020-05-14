@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="bg-gray-200" v-if="token">
+    <nav class="bg-gray-200" v-if="getToken">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
           <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start"></div>
@@ -9,7 +9,7 @@
           >
             <div
               class="px-3 py-1 border border-teal-500 rounded-md text-md text-teal-500"
-            >{{fullname}}</div>
+            >{{getFullname}}</div>
             <!-- Profile dropdown -->
             <div class="ml-3 relative">
               <div>
@@ -26,11 +26,11 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Header",
   computed: {
-    ...mapState("users", ["token", "fullname"]),
+    ...mapGetters("users", ["getToken", "getFullname"]),
     ...mapActions(["logout", "getUserLogin"])
   },
   created() {

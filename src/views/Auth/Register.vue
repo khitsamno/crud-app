@@ -6,7 +6,7 @@
       >Register | Crud.App</h1>
       <div class="mt-10 flex justify-center">
         <div class="w-full max-w-xs">
-          <AlertDanger v-bind:message="validate.message" />
+          <AlertDanger v-bind:message="getValidate.message" />
 
           <form class="mt-5 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit="onSubmit">
             <div class="mb-4">
@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import AlertDanger from "../../components/Alerts/AlertDanger.vue";
 export default {
   name: "Register",
@@ -73,7 +73,7 @@ export default {
     AlertDanger
   },
   computed: {
-    ...mapState("validate", ["validate"]),
+    ...mapGetters("validate", ["getValidate"]),
     ...mapActions(["validateRegister", "register"])
   },
   methods: {
@@ -81,7 +81,7 @@ export default {
       e.preventDefault();
       this.$store
         .dispatch("validate/validateRegister", this.user)
-        .then((valid = this.validate.message) => {
+        .then((valid = this.getValidate.message) => {
           if (valid == "") {
             this.$store
               .dispatch("users/register", this.user)

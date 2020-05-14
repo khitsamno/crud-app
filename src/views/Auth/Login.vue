@@ -4,7 +4,7 @@
       <h1 class="uppercase text-lg lg:text-3xl text-center text-gray-800 lg:mt-10">Login | Crud.App</h1>
       <div class="mt-10 flex justify-center">
         <div class="w-full max-w-xs">
-          <AlertDanger v-bind:message="message ?message :validate.message" />
+          <AlertDanger v-bind:message="getMessage ? getMessage :getValidate.message" />
 
           <form class="mt-5 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit="onLogin">
             <div class="mb-4">
@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import AlertDanger from "../../components/Alerts/AlertDanger.vue";
 export default {
   name: "Login",
@@ -55,8 +55,8 @@ export default {
   },
   components: { AlertDanger },
   computed: {
-    ...mapState("validate", ["validate"]),
-    ...mapState("users", ["message"]),
+    ...mapGetters("users", ["getToken", "getMessage"]),
+    ...mapGetters("validate", ["getValidate"]),
     ...mapActions(["login"]),
     ...mapActions(["validateLogin", "register"])
   },
@@ -65,7 +65,7 @@ export default {
       e.preventDefault();
       this.$store
         .dispatch("validate/validateLogin", this.credential)
-        .then((valid = this.validate.message) => {
+        .then((valid = this.getValidate.message) => {
           if (valid == "") {
             this.$store
               .dispatch("users/login", this.credential)
