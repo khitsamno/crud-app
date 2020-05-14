@@ -6,10 +6,10 @@ const todos = {
         todos: []
     },
     getters: {
-        getTodo: state => {
+        getTodo: (state) => {
             return state.todos
         },
-        getTodoLength: state => {
+        getTodoLength: (state) => {
             return state.todos.length
         },
     },

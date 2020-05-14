@@ -17,7 +17,7 @@
             @click="!todo['isEdit'] ? onEditTodo(todo['id']) : onUpdateTodo(todo['id'], todo['title'])"
             type="button"
             class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-0 px-2 rounded mx-2"
-          >{{!todo['isEdit']?'&#x270E;':'OK'}}</button>
+          >{{!todo['isEdit']?'&#x270E;':'save'}}</button>
           <button
             @click="onRemoveTodo(todo['id'])"
             type="button"
@@ -40,12 +40,14 @@ export default {
     ...mapGetters("todos", ["getTodo", "getTodoLength"]),
     ...mapActions(["loadData", "removeTodo", "getEditTodo", "updateTodo"])
   },
-  mounted() {
+  created() {
     this.$store.dispatch("todos/loadData");
   },
   methods: {
     onRemoveTodo(id) {
-      this.$store.dispatch("todos/removeTodo", id);
+      if (confirm("Do you want to delete?")) {
+        this.$store.dispatch("todos/removeTodo", id);
+      }
     },
     onEditTodo(id) {
       this.$store.dispatch("todos/getEditTodo", id);
